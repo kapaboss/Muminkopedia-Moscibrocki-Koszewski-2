@@ -7,10 +7,24 @@ export interface IArtifact extends Document {
     owner: Types.ObjectId;
 }
 
+const nonBlankString = (value: unknown) =>
+    typeof value === 'string' && value.trim().length > 0;
 
 const artifactSchema = new Schema<IArtifact>({
-    name: { type: String, required: true },
-    properties: { type: String, required: true },
+    name: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 1,
+        validate: { validator: nonBlankString, message: 'Nazwa artefaktu nie może być pusta' }
+    },
+    properties: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 1,
+        validate: { validator: nonBlankString, message: 'Właściwości artefaktu nie mogą być puste' }
+    },
     owner: { type: Schema.Types.ObjectId, ref: 'Character', required: true }
 }, {
     timestamps: true
