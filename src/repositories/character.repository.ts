@@ -17,6 +17,13 @@ class CharacterRepository {
         return await character.save();
     }
 
+    async updateSleepStatus(id: string, isSleeping: boolean): Promise<ICharacter | null> {
+        return await Character.findByIdAndUpdate(
+            id,
+            { $set: { isSleeping } },
+            { new: true }
+        ).populate('bestFriend');
+    }
 
     async delete(id: string): Promise<ICharacter | null> {
         return await Character.findByIdAndDelete(id);
