@@ -5,5 +5,6 @@ const router = Router();
 
 
 router.get('/', CharacterController.getAll);
+router.patch('/:id/sleep', CharacterController.updateSleepStatus);
 
 export default router;
