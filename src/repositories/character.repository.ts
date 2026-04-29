@@ -14,13 +14,33 @@ class CharacterRepository {
 
     async create(characterData: Partial<ICharacter>): Promise<ICharacter> {
         const character = new Character(characterData);
-        return await character.save();
+        const saved = await character.save();
+        return await saved.populate('bestFriend');
     }
 
     async updateSleepStatus(id: string, isSleeping: boolean): Promise<ICharacter | null> {
         return await Character.findByIdAndUpdate(
             id,
             { $set: { isSleeping } },
+            { new: true }
+        ).populate('bestFriend');
+    }
+
+    async update(
+        id: string,
+        patch: Partial<Pick<ICharacter, 'name' | 'description' | 'species' | 'isSleeping'>>
+    ): Promise<ICharacter | null> {
+        return await Character.findByIdAndUpdate(
+            id,
+            { $set: patch },
+            { new: true }
+        ).populate('bestFriend');
+    }
+
+    async updateBestFriend(id: string, bestFriendId: string | null): Promise<ICharacter | null> {
+        return await Character.findByIdAndUpdate(
+            id,
+            { $set: { bestFriend: bestFriendId } },
             { new: true }
         ).populate('bestFriend');
     }
